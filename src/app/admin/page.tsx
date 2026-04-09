@@ -24,7 +24,10 @@ export default async function Admin() {
       </p>
 
       <div className="rounded-xl border p-4">
-        <div className="font-medium">下一步</div>
+        <div className="font-medium">快捷入口</div>
+        <div className="mt-2"><a className="underline" href="/admin/withdrawals?coin=USDC">提现审核列表</a></div>
+
+        <div className="mt-6 font-medium">下一步</div>
         <ul className="mt-2 list-disc pl-5 text-sm text-muted-foreground space-y-1">
           <li>提现申请列表 + 审核记录（PENDING/APPROVED/REJECTED/PAID）</li>
           <li>两级权限（ADMIN/REVIEWER）</li>
