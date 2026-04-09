@@ -19,14 +19,13 @@ export default function AdminLogin() {
           e.preventDefault()
           setLoading(true)
           setError(null)
-          const res = await signIn('credentials', {
+          await signIn('credentials', {
             email,
             password,
             redirect: true,
             callbackUrl: '/admin',
           })
-          // signIn will redirect on success; on failure it may return null.
-          if (res && (res as any).error) setError('Invalid credentials')
+          // If credentials are wrong, NextAuth will redirect back with an error.
           setLoading(false)
         }}
       >
