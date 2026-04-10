@@ -3,6 +3,8 @@ import './globals.css'
 
 import { SessionProvider } from 'next-auth/react'
 
+import Providers from './providers'
+
 export const metadata: Metadata = {
   title: 'Nexus Arbi',
   description: 'Nexus Arbi v0.1',
@@ -16,7 +18,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <SessionProvider>{children}</SessionProvider>
+        <SessionProvider>
+          <Providers>{children}</Providers>
+        </SessionProvider>
       </body>
     </html>
   )

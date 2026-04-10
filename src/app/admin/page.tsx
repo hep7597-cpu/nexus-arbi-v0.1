@@ -1,37 +1,51 @@
-import { auth } from '@/auth'
+'use client'
+
 import Link from 'next/link'
+import { useState } from 'react'
 
-export default async function Admin() {
-  const session = await auth()
+export default function Admin() {
+  const [msg, setMsg] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
 
-  if (!session?.user) {
-    return (
-      <main className="mx-auto max-w-3xl p-6 space-y-6">
-        <h2 className="text-2xl font-semibold">后台 Admin</h2>
-        <p className="text-sm text-muted-foreground">需要登录才能访问。</p>
-        <Link className="underline" href="/admin/login">
-          去登录
-        </Link>
-      </main>
-    )
+  async function seed() {
+    setMsg(null)
+    setLoading(true)
+    try {
+      const res = await fetch('/api/admin/seed-withdrawals', { method: 'POST' })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data?.error || 'failed')
+      setMsg(`OK: created ${data.created}`)
+    } catch (e: any) {
+      setMsg(e?.message || 'failed')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
     <main className="mx-auto max-w-3xl p-6 space-y-6">
       <h2 className="text-2xl font-semibold">后台 Admin</h2>
-      <p className="text-sm text-muted-foreground">
-        已登录：{session.user.email}
-      </p>
 
-      <div className="rounded-xl border p-4">
+      <div className="rounded-xl border p-4 space-y-3">
         <div className="font-medium">快捷入口</div>
-        <div className="mt-2"><a className="underline" href="/admin/withdrawals?coin=USDC">提现审核列表</a></div>
+        <div>
+          <Link className="underline" href="/admin/withdrawals">
+            提现审核列表
+          </Link>
+        </div>
+      </div>
 
-        <div className="mt-6 font-medium">下一步</div>
-        <ul className="mt-2 list-disc pl-5 text-sm text-muted-foreground space-y-1">
-          <li>提现申请列表 + 审核记录（PENDING/APPROVED/REJECTED/PAID）</li>
-          <li>两级权限（ADMIN/REVIEWER）</li>
-        </ul>
+      <div className="rounded-xl border p-4 space-y-3">
+        <div className="font-medium">测试数据</div>
+        <p className="text-sm text-muted-foreground">一键插入 2 条 WithdrawOrder 方便验收。</p>
+        <button
+          className="rounded-md bg-black px-3 py-2 text-white disabled:opacity-50"
+          onClick={seed}
+          disabled={loading}
+        >
+          {loading ? 'Seeding…' : 'Seed 2 WithdrawOrders'}
+        </button>
+        {msg ? <div className="text-sm">{msg}</div> : null}
       </div>
     </main>
   )
