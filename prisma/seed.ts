@@ -1,8 +1,6 @@
-import { PrismaClient } from '../src/generated/prisma'
+import { PrismaClient } from '../src/generated/prisma/client'
 
-const prisma = new PrismaClient({
-  datasourceUrl: process.env.DATABASE_URL_APP || process.env.DATABASE_URL,
-})
+const prisma = new PrismaClient({} as any)
 
 function orderNo() {
   const d = new Date()

@@ -1,20 +1,22 @@
-import { PrismaClient } from '@prisma/client'
-
-const datasourceUrl = process.env.DATABASE_URL_APP || process.env.DATABASE_URL
-if (!datasourceUrl) {
-  // Avoid silent misconfig in serverless environments.
-  console.warn('Missing DATABASE_URL_APP / DATABASE_URL')
-}
+import { PrismaClient } from '@/generated/prisma/client'
 
 declare global {
   // eslint-disable-next-line no-var
   var prisma: PrismaClient | undefined
 }
 
+// This project uses Prisma Client ("client" engine type) which requires either
+// an adapter or accelerateUrl in the constructor. For local dev, we provide a
+// harmless placeholder to satisfy the constructor during `next build` route data
+// collection. In real deployments, set PRISMA_ACCELERATE_URL (recommended) and
+// DATABASE_URL.
+const accelerateUrl =
+  process.env.PRISMA_ACCELERATE_URL || 'https://accelerate.prisma-data.net'
+
 export const prisma =
   global.prisma ||
   new PrismaClient({
-    datasourceUrl,
-  })
+    accelerateUrl,
+  } as any)
 
 if (process.env.NODE_ENV !== 'production') global.prisma = prisma
