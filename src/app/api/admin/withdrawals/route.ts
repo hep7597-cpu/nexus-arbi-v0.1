@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/auth'
-import { prisma } from '@/server/db'
+import { getPrisma } from '@/server/db'
 
 export async function GET(req: Request) {
   const session = await auth()
@@ -16,7 +16,7 @@ export async function GET(req: Request) {
   if (coin && ['USDC', 'USDT'].includes(coin)) where.coin = coin
   if (status && status !== 'ALL') where.status = status
 
-  const rows = await prisma.withdrawOrder.findMany({
+  const rows = await getPrisma().withdrawOrder.findMany({
     where,
     orderBy: { createdAt: 'desc' },
     take: 100,

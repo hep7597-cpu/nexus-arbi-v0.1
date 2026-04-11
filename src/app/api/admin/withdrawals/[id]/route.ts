@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/auth'
-import { prisma } from '@/server/db'
+import { getPrisma } from '@/server/db'
 
 export async function GET(_: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth()
   if (!session?.user) return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
 
   const { id } = await params
-  const row = await prisma.withdrawOrder.findUnique({ where: { id } })
+  const row = await getPrisma().withdrawOrder.findUnique({ where: { id } })
   if (!row) return NextResponse.json({ error: 'not_found' }, { status: 404 })
   return NextResponse.json({ row })
 }
@@ -23,7 +23,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   const note = (body.note as string | undefined) ?? null
 
   if (action === 'APPROVE') {
-    const row = await prisma.withdrawOrder.update({
+    const row = await getPrisma().withdrawOrder.update({
       where: { id },
       data: {
         status: 'APPROVED',
@@ -35,7 +35,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   }
 
   if (action === 'REJECT') {
-    const row = await prisma.withdrawOrder.update({
+    const row = await getPrisma().withdrawOrder.update({
       where: { id },
       data: {
         status: 'REJECTED',
@@ -52,7 +52,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
       return NextResponse.json({ error: 'paidTxHash_required' }, { status: 400 })
     }
 
-    const row = await prisma.withdrawOrder.update({
+    const row = await getPrisma().withdrawOrder.update({
       where: { id },
       data: {
         status: 'PAID',

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/auth'
-import { prisma } from '@/server/db'
+import { getPrisma } from '@/server/db'
 
 function orderNo() {
   const d = new Date()
@@ -19,13 +19,13 @@ export async function POST() {
 
   // Create a deterministic demo user if missing.
   const wallet = '0x000000000000000000000000000000000000dead'
-  const user = await prisma.user.upsert({
+  const user = await getPrisma().user.upsert({
     where: { walletAddress: wallet },
     update: {},
     create: { walletAddress: wallet },
   })
 
-  const created = await prisma.withdrawOrder.createMany({
+  const created = await getPrisma().withdrawOrder.createMany({
     data: [
       {
         orderNo: orderNo(),
