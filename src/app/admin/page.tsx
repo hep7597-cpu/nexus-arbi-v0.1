@@ -11,10 +11,21 @@ export default function Admin() {
     setMsg(null)
     setLoading(true)
     try {
-      const res = await fetch('/api/admin/seed-withdrawals', { method: 'POST' })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data?.error || 'failed')
-      setMsg(`OK: created ${data.created}`)
+      const res = await fetch('/api/admin/seed-withdrawals', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+      })
+
+      const text = await res.text()
+      let data: any = null
+      try {
+        data = text ? JSON.parse(text) : null
+      } catch {
+        // ignore
+      }
+
+      if (!res.ok) throw new Error(data?.error || text || 'failed')
+      setMsg(`OK: created ${data?.created ?? '?'}`)
     } catch (e: any) {
       setMsg(e?.message || 'failed')
     } finally {
