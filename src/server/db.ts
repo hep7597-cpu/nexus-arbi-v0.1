@@ -10,9 +10,10 @@ export function getPrisma() {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const { PrismaClient } = require('../generated/prisma/client')
 
-  const accelerateUrl =
-    process.env.PRISMA_ACCELERATE_URL || 'prisma://localhost?api_key=dev'
+  const url = process.env.DATABASE_URL_APP || process.env.DATABASE_URL
+  if (!url) throw new Error('DATABASE_URL_APP/DATABASE_URL is missing')
 
-  _prisma = new PrismaClient({ accelerateUrl })
+  // Use direct DB connection in runtime
+  _prisma = new PrismaClient({ datasourceUrl: url } as any)
   return _prisma
 }
