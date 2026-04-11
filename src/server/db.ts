@@ -5,18 +5,14 @@ declare global {
   var prisma: PrismaClient | undefined
 }
 
-// This project uses Prisma Client ("client" engine type) which requires either
-// an adapter or accelerateUrl in the constructor. For local dev, we provide a
-// harmless placeholder to satisfy the constructor during `next build` route data
-// collection. In real deployments, set PRISMA_ACCELERATE_URL (recommended) and
-// DATABASE_URL.
+// IMPORTANT:
+// - Vercel build must not try to connect to DB.
+// - Prisma 7 + custom output client in this repo expects a constructor option.
+// We provide a harmless placeholder for build-time route collection.
 const accelerateUrl =
-  process.env.PRISMA_ACCELERATE_URL || 'https://accelerate.prisma-data.net'
+  process.env.PRISMA_ACCELERATE_URL || 'prisma://localhost?api_key=dev'
 
 export const prisma =
-  global.prisma ||
-  new PrismaClient({
-    accelerateUrl,
-  } as any)
+  global.prisma || (new PrismaClient({ accelerateUrl } as any) as any)
 
 if (process.env.NODE_ENV !== 'production') global.prisma = prisma
