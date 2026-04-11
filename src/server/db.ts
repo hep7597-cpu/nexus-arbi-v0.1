@@ -5,10 +5,8 @@ declare global {
   var prisma: PrismaClient | undefined
 }
 
-// IMPORTANT:
-// - Vercel build must not try to connect to DB.
-// - Prisma 7 + custom output client in this repo expects a constructor option.
-// We provide a harmless placeholder for build-time route collection.
+// Vercel build must not connect DB.
+// Our generated Prisma client requires an "accelerateUrl" option (Prisma 7).
 const accelerateUrl =
   process.env.PRISMA_ACCELERATE_URL || 'prisma://localhost?api_key=dev'
 
