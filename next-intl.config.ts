@@ -1,9 +1,7 @@
-import type { NextIntlConfig } from 'next-intl'
-import { defaultLocale, locales } from './src/i18n/config'
+import { defaultLocale, locales, localePrefix } from './src/i18n/config'
 
-const config: NextIntlConfig = {
+export default {
   locales: [...locales],
   defaultLocale,
+  localePrefix,
 }
-
-export default config
