@@ -1,0 +1,187 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Chain {
+  BASE
+}
+
+enum Stablecoin {
+  USDC
+  USDT
+}
+
+enum TxStatus {
+  PENDING
+  CONFIRMED
+  FAILED
+}
+
+enum WithdrawStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  PAID
+}
+
+enum RoundStatus {
+  OPEN
+  SETTLED
+}
+
+enum Role {
+  ADMIN
+  REVIEWER
+}
+
+model User {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  walletAddress String @unique
+
+  // balances
+  balanceUsdc Decimal @default(0) @db.Decimal(36, 18)
+  balanceUsdt Decimal @default(0) @db.Decimal(36, 18)
+
+  // times
+  dailyQuotaUsed Int       @default(0)
+  timesBalance   Int       @default(0)
+  quotaResetAt   DateTime?
+
+  deposits     DepositOrder[]
+  serviceCodes ServiceCode[]
+  roundEntries RoundEntry[]
+  withdrawals  WithdrawOrder[]
+
+  @@index([walletAddress])
+}
+
+model DepositOrder {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orderNo String     @unique
+  chain   Chain
+  coin    Stablecoin
+
+  toAddress   String
+  fromAddress String?
+
+  txHash      String? @unique
+  blockNumber BigInt?
+
+  amount        Decimal @db.Decimal(36, 18)
+  confirmations Int     @default(0)
+  requiredConf  Int     @default(10)
+
+  status      TxStatus  @default(PENDING)
+  confirmedAt DateTime?
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+
+  @@index([toAddress])
+  @@index([txHash])
+}
+
+model ServiceCode {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  code       String     @unique
+  issuedFor  Stablecoin
+  expiresAt  DateTime
+  redeemedAt DateTime?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model Round {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  roundNo   Int         @unique
+  startedAt DateTime
+  endsAt    DateTime
+  status    RoundStatus @default(OPEN)
+
+  entries RoundEntry[]
+
+  @@index([status])
+  @@index([endsAt])
+}
+
+model RoundEntry {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  roundId String
+  round   Round  @relation(fields: [roundId], references: [id])
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  coin      Stablecoin
+  amount    Decimal    @db.Decimal(36, 18)
+  profit    Decimal    @db.Decimal(36, 18)
+  settledAt DateTime?
+
+  @@index([userId])
+  @@index([roundId])
+}
+
+model WithdrawOrder {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orderNo String @unique
+  userId  String
+  user    User   @relation(fields: [userId], references: [id])
+
+  chain  Chain
+  coin   Stablecoin
+  amount Decimal    @db.Decimal(36, 18)
+
+  toAddress String
+
+  kycRef String?
+  status WithdrawStatus @default(PENDING)
+
+  reviewedBy String?
+  reviewedAt DateTime?
+  reviewNote String?
+
+  paidTxHash String?
+  paidAt     DateTime?
+
+  @@index([status])
+  @@index([userId])
+}
+
+model AdminUser {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  email        String @unique
+  passwordHash String
+  role         Role
+}
