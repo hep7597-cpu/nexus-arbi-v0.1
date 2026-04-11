@@ -1,7 +1,7 @@
-import { defaultLocale, locales, localePrefix } from './src/i18n/config'
+// Keep this file dependency-free. next-intl loads it at runtime on Vercel.
 
 export default {
-  locales: [...locales],
-  defaultLocale,
-  localePrefix,
+  locales: ['zh', 'en'],
+  defaultLocale: 'zh',
+  localePrefix: 'always',
 }
