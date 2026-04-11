@@ -13,19 +13,23 @@ function orderNo() {
   return `WD${y}${m}${day}${rand}`
 }
 
-export async function POST() {
+async function doSeed() {
   const session = await auth()
-  if (!session?.user) return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
+  if (!session?.user) {
+    return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
+  }
+
+  const prisma = getPrisma()
 
   // Create a deterministic demo user if missing.
   const wallet = '0x000000000000000000000000000000000000dead'
-  const user = await getPrisma().user.upsert({
+  const user = await prisma.user.upsert({
     where: { walletAddress: wallet },
     update: {},
     create: { walletAddress: wallet },
   })
 
-  const created = await getPrisma().withdrawOrder.createMany({
+  const created = await prisma.withdrawOrder.createMany({
     data: [
       {
         orderNo: orderNo(),
@@ -51,4 +55,13 @@ export async function POST() {
   })
 
   return NextResponse.json({ ok: true, created: created.count })
+}
+
+export async function POST() {
+  return doSeed()
+}
+
+export async function GET() {
+  // Allow triggering via browser (for mobile testing)
+  return doSeed()
 }
