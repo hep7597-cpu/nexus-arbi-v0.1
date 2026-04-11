@@ -1,0 +1,26 @@
+{
+  "nav": {
+    "dashboard": "总览",
+    "rounds": "轮次",
+    "deposit": "充值",
+    "withdraw": "提现",
+    "me": "我的",
+    "admin": "后台"
+  },
+  "top": {
+    "announcement": "公告"
+  },
+  "actions": {
+    "support": "客服",
+    "connectWallet": "连接钱包"
+  },
+  "me": {
+    "title": "我的",
+    "kyc": "KYC 认证",
+    "kycHint": "提现前需要完成 KYC。"
+  },
+  "support": {
+    "title": "客服",
+    "openTelegram": "前往 Telegram 客服"
+  }
+}

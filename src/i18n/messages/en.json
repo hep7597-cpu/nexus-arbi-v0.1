@@ -1,0 +1,26 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "rounds": "Rounds",
+    "deposit": "Deposit",
+    "withdraw": "Withdraw",
+    "me": "Me",
+    "admin": "Admin"
+  },
+  "top": {
+    "announcement": "Announcement"
+  },
+  "actions": {
+    "support": "Support",
+    "connectWallet": "Connect Wallet"
+  },
+  "me": {
+    "title": "Me",
+    "kyc": "KYC Verification",
+    "kycHint": "KYC is required before withdrawals."
+  },
+  "support": {
+    "title": "Customer Support",
+    "openTelegram": "Open Telegram Support"
+  }
+}
