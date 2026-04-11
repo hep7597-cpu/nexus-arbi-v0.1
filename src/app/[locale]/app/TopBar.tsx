@@ -1,12 +1,11 @@
 'use client'
 
 import Link from 'next/link'
-import { useLocale, useTranslations } from 'next-intl'
+import type { Locale } from '@/lib/i18n/messages'
+import { getMessages } from '@/lib/i18n/messages'
 
-export function TopBar({ supportUrl }: { supportUrl: string }) {
-  const t = useTranslations()
-  const locale = useLocale()
-
+export function TopBar({ supportUrl, locale }: { supportUrl: string; locale: Locale }) {
+  const m = getMessages(locale)
   const nextLocale = locale === 'zh' ? 'en' : 'zh'
 
   return (
@@ -19,7 +18,7 @@ export function TopBar({ supportUrl }: { supportUrl: string }) {
 
         <div className="flex items-center gap-3 text-xs text-white/70">
           <Link
-            href={`/${nextLocale}`}
+            href={`/${nextLocale}/app`}
             className="rounded-full border border-white/10 bg-white/5 px-3 py-1 hover:bg-white/10"
           >
             {locale === 'zh' ? 'EN' : '简'}
@@ -30,7 +29,7 @@ export function TopBar({ supportUrl }: { supportUrl: string }) {
             target="_blank"
             className="rounded-full border border-white/10 bg-white/5 px-3 py-1 hover:bg-white/10"
           >
-            {t('actions.support')}
+            {m.actions.support}
           </Link>
         </div>
       </div>
@@ -39,11 +38,11 @@ export function TopBar({ supportUrl }: { supportUrl: string }) {
         <div className="mx-auto max-w-5xl px-6 py-2 text-xs text-amber-200/90">
           <div className="overflow-hidden whitespace-nowrap">
             <div className="inline-block animate-[marquee_18s_linear_infinite]">
-              {t('top.announcement')}: v0.1 Base Sepolia 测试中 · 提现需 KYC + 后台审核 · 请勿使用主网资产
+              {m.top.announcement}: v0.1 Base Sepolia 测试中 · 提现需 KYC + 后台审核 · 请勿使用主网资产
               <span className="mx-8">•</span>
-              {t('top.announcement')}: 轮次收益按比例结算，示例为 2%
+              {m.top.announcement}: 轮次收益按比例结算，示例为 2%
               <span className="mx-8">•</span>
-              {t('top.announcement')}: 客服请点击右上角
+              {m.top.announcement}: 客服请点击右上角
             </div>
           </div>
         </div>
