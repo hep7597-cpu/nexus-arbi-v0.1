@@ -18,7 +18,14 @@ async function basescanGet(params: Record<string, string>) {
   for (const [k, v] of Object.entries(params)) url.searchParams.set(k, v)
   url.searchParams.set('apikey', apiKey)
 
-  const res = await fetch(url.toString())
+  const res = await fetch(url.toString(), {
+    // Vercel/Node fetch sometimes fails TLS/handshake; force no-cache + explicit UA.
+    headers: {
+      'user-agent': 'nexus-arbi-v0.1/1.0 (deposits-poll)',
+      accept: 'application/json',
+    },
+    cache: 'no-store',
+  })
   const data = await res.json().catch(() => null)
   if (!res.ok) throw new Error(`basescan_http_${res.status}`)
   if (!data) throw new Error('basescan_bad_json')
