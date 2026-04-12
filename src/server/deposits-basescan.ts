@@ -10,7 +10,11 @@ function requireEnv(name: string) {
 
 async function basescanGet(params: Record<string, string>) {
   const apiKey = requireEnv('BASESCAN_API_KEY')
-  const url = new URL('https://api-sepolia.basescan.org/api')
+  // Etherscan/Basescan API V2 uses a unified host.
+  // For Base Sepolia (chainid 84532) we call https://api.etherscan.io/v2/api
+  const url = new URL('https://api.etherscan.io/v2/api')
+  // V2 requires chainid.
+  url.searchParams.set('chainid', '84532')
   for (const [k, v] of Object.entries(params)) url.searchParams.set(k, v)
   url.searchParams.set('apikey', apiKey)
 
