@@ -29,6 +29,11 @@ export function getBaseSepoliaClient() {
     process.env.BASE_SEPOLIA_RPC_URL ||
     process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL ||
     'https://sepolia.base.org'
+
+  // Some public RPC providers require a different JSON-RPC method name.
+  // viem defaults to `eth_getTransactionByHash` / `eth_getTransactionReceipt`.
+  // BlastAPI's Base Sepolia endpoint may be incompatible with `eth_getTransactionByHash`.
+  // Prefer standard-compatible providers (Alchemy/Infura/QuickNode/PublicNode).
   return createPublicClient({ chain: baseSepolia, transport: http(url) })
 }
 
