@@ -14,8 +14,12 @@ export async function POST(req: Request) {
   const txHash = String(body?.txHash || '')
   if (!isTxHash(txHash)) return NextResponse.json({ error: 'invalid txHash' }, { status: 400 })
 
-  const result = await upsertDepositByTxHash(txHash as any)
-  return NextResponse.json({ ok: true, result })
+  try {
+    const result = await upsertDepositByTxHash(txHash as any)
+    return NextResponse.json({ ok: true, result })
+  } catch (e: any) {
+    return NextResponse.json({ error: 'poll_failed', message: e?.message || String(e) }, { status: 500 })
+  }
 }
 
 export async function GET(req: Request) {
@@ -26,6 +30,10 @@ export async function GET(req: Request) {
   const txHash = String(url.searchParams.get('txHash') || '')
   if (!isTxHash(txHash)) return NextResponse.json({ error: 'invalid txHash' }, { status: 400 })
 
-  const result = await upsertDepositByTxHash(txHash as any)
-  return NextResponse.json({ ok: true, result })
+  try {
+    const result = await upsertDepositByTxHash(txHash as any)
+    return NextResponse.json({ ok: true, result })
+  } catch (e: any) {
+    return NextResponse.json({ error: 'poll_failed', message: e?.message || String(e) }, { status: 500 })
+  }
 }
