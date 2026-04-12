@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { WalletCard } from '../../app/WalletCard'
+import { WalletCardI18n } from './WalletCardI18n'
 import type { Locale } from '@/lib/i18n/messages'
 import { getMessages } from '@/lib/i18n/messages'
 import { TopBar } from './TopBar'
@@ -38,7 +38,7 @@ export default async function ClientDashboard({
               <div className="text-xs text-white/50">Wallet login</div>
             </div>
             <div className="mt-4">
-              <WalletCard />
+              <WalletCardI18n locale={lang} />
             </div>
           </div>
 
@@ -49,7 +49,7 @@ export default async function ClientDashboard({
                 href="/rounds"
                 className="rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm hover:bg-black/40"
               >
-                Enter 60s Rounds
+                {m.rounds.enter}
               </Link>
               <Link
                 href={`/${lang}/me`}

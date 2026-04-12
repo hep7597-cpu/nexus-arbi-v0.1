@@ -11,6 +11,17 @@ type Messages = {
   }
   top: { announcement: string }
   actions: { support: string; connectWallet: string }
+  wallet: {
+    title: string
+    address: string
+    chain: string
+    goRounds: string
+    onlyBaseSepolia: string
+    wrongNetwork: string
+  }
+  rounds: {
+    enter: string
+  }
   me: { title: string; kyc: string; kycHint: string }
   support: { title: string; openTelegram: string }
   admin: {
@@ -55,6 +66,17 @@ const zh: Messages = {
   },
   top: { announcement: '公告' },
   actions: { support: '客服', connectWallet: '连接钱包' },
+  wallet: {
+    title: '钱包',
+    address: '地址',
+    chain: '网络',
+    goRounds: '去 60 秒轮次',
+    onlyBaseSepolia: '仅支持 Base Sepolia',
+    wrongNetwork: '网络不对',
+  },
+  rounds: {
+    enter: '进入 60 秒轮次',
+  },
   me: { title: '我的', kyc: 'KYC 认证', kycHint: '提现前需要完成 KYC。' },
   support: { title: '客服', openTelegram: '前往 Telegram 客服' },
   admin: {
@@ -99,6 +121,17 @@ const en: Messages = {
   },
   top: { announcement: 'Announcement' },
   actions: { support: 'Support', connectWallet: 'Connect Wallet' },
+  wallet: {
+    title: 'Wallet',
+    address: 'Address',
+    chain: 'Chain',
+    goRounds: 'Go to 60s Rounds',
+    onlyBaseSepolia: 'Only Base Sepolia is supported',
+    wrongNetwork: 'Wrong network',
+  },
+  rounds: {
+    enter: 'Enter 60s Rounds',
+  },
   me: { title: 'Me', kyc: 'KYC Verification', kycHint: 'KYC is required before withdrawals.' },
   support: { title: 'Customer Support', openTelegram: 'Open Telegram Support' },
   admin: {
