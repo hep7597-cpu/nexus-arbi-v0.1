@@ -45,11 +45,21 @@ export default function AdminDeposits({ params }: { params: Promise<{ locale: st
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ txHash: DEMO_TX }),
       })
+      const contentType = res.headers.get('content-type') || ''
       const text = await res.text()
+
+      // If the API accidentally returns an HTML error page (404/500), show a readable message.
+      if (contentType.includes('text/html')) {
+        throw new Error(`HTTP ${res.status}: server returned HTML (check route/auth).`)
+      }
+
       let data: any = null
       try {
         data = text ? JSON.parse(text) : null
-      } catch {}
+      } catch {
+        // ignore
+      }
+
       if (!res.ok) throw new Error(data?.error || text || 'failed')
       setMsg('OK')
       await refresh()
