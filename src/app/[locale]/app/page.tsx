@@ -5,6 +5,7 @@ import { WalletCard } from '../../app/WalletCard'
 import type { Locale } from '@/lib/i18n/messages'
 import { getMessages } from '@/lib/i18n/messages'
 import { TopBar } from './TopBar'
+import { UsdcBalanceStat } from './UsdcBalanceStat'
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
@@ -67,7 +68,9 @@ export default function ClientDashboard({ params }: { params: Promise<{ locale: 
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <Stat label="Balance (USDC)" value="—" />
+          {/* chain-read */}
+          {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+          <UsdcBalanceStat />
           <Stat label="Balance (USDT)" value="—" />
           <Stat label="Level" value="L1" />
           <Stat label="Times (today)" value="0 / 3" />
