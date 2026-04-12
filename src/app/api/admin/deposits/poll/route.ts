@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/auth'
-import { upsertDepositByTxHash } from '@/server/deposits'
+import { upsertDepositByTxHashBasescan } from '@/server/deposits-basescan'
 
 function isTxHash(x: string) {
   return /^0x[0-9a-fA-F]{64}$/.test(x)
@@ -15,7 +15,7 @@ export async function POST(req: Request) {
   if (!isTxHash(txHash)) return NextResponse.json({ error: 'invalid txHash' }, { status: 400 })
 
   try {
-    const result = await upsertDepositByTxHash(txHash as any)
+    const result = await upsertDepositByTxHashBasescan(txHash as any)
     return NextResponse.json({ ok: true, result })
   } catch (e: any) {
     return NextResponse.json({ error: 'poll_failed', message: e?.message || String(e) }, { status: 500 })
@@ -31,7 +31,7 @@ export async function GET(req: Request) {
   if (!isTxHash(txHash)) return NextResponse.json({ error: 'invalid txHash' }, { status: 400 })
 
   try {
-    const result = await upsertDepositByTxHash(txHash as any)
+    const result = await upsertDepositByTxHashBasescan(txHash as any)
     return NextResponse.json({ ok: true, result })
   } catch (e: any) {
     return NextResponse.json({ error: 'poll_failed', message: e?.message || String(e) }, { status: 500 })
