@@ -60,7 +60,10 @@ export default function AdminDeposits({ params }: { params: Promise<{ locale: st
         // ignore
       }
 
-      if (!res.ok) throw new Error(data?.error || data?.message || text || 'failed')
+      if (!res.ok) {
+        const msg = data?.message ? `${data.error}: ${data.message}` : (data?.error || text || 'failed')
+        throw new Error(msg)
+      }
       setMsg('OK')
       await refresh()
     } catch (e: any) {
