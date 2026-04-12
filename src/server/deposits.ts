@@ -25,7 +25,11 @@ function nowOrderNo() {
 }
 
 export function getBaseSepoliaClient() {
-  return createPublicClient({ chain: baseSepolia, transport: http() })
+  const url =
+    process.env.BASE_SEPOLIA_RPC_URL ||
+    process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL ||
+    'https://sepolia.base.org'
+  return createPublicClient({ chain: baseSepolia, transport: http(url) })
 }
 
 function genServiceCode() {
