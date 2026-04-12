@@ -1,5 +1,3 @@
-'use client'
-
 import Link from 'next/link'
 import { WalletCard } from '../../app/WalletCard'
 import type { Locale } from '@/lib/i18n/messages'
@@ -7,23 +5,19 @@ import { getMessages } from '@/lib/i18n/messages'
 import { TopBar } from './TopBar'
 import { UsdcBalanceStat } from './UsdcBalanceStat'
 
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-      <div className="text-xs text-white/60">{label}</div>
-      <div className="mt-1 text-lg font-semibold tracking-tight">{value}</div>
-    </div>
-  )
-}
-
-export default function ClientDashboard({ params }: { params: Promise<{ locale: string }> }) {
-  const locale: Locale = (params as any)?.locale === 'en' ? 'en' : 'zh'
-  const m = getMessages(locale)
+export default async function ClientDashboard({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+  const lang: Locale = locale === 'en' ? 'en' : 'zh'
+  const m = getMessages(lang)
   const supportUrl = process.env.NEXT_PUBLIC_SUPPORT_TELEGRAM || 'https://t.me/nexusArbiapp'
 
   return (
     <main className="min-h-screen bg-[#070A10] text-white">
-      <TopBar supportUrl={supportUrl} locale={locale} />
+      <TopBar supportUrl={supportUrl} locale={lang} />
 
       <div className="mx-auto max-w-5xl px-6 py-8 space-y-6">
         <header className="flex items-end justify-between gap-4">
@@ -58,7 +52,7 @@ export default function ClientDashboard({ params }: { params: Promise<{ locale: 
                 Enter 60s Rounds
               </Link>
               <Link
-                href={`/${locale}/me`}
+                href={`/${lang}/me`}
                 className="rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm hover:bg-black/40"
               >
                 {m.nav.me} / KYC
@@ -68,16 +62,23 @@ export default function ClientDashboard({ params }: { params: Promise<{ locale: 
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {/* chain-read */}
-          {/* eslint-disable-next-line @next/next/no-sync-scripts */}
           <UsdcBalanceStat />
-          <Stat label="Balance (USDT)" value="—" />
-          <Stat label="Level" value="L1" />
-          <Stat label="Times (today)" value="0 / 3" />
+          <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+            <div className="text-xs text-white/60">Balance (USDT)</div>
+            <div className="mt-1 text-lg font-semibold tracking-tight">—</div>
+          </div>
+          <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+            <div className="text-xs text-white/60">Level</div>
+            <div className="mt-1 text-lg font-semibold tracking-tight">L1</div>
+          </div>
+          <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+            <div className="text-xs text-white/60">Times (today)</div>
+            <div className="mt-1 text-lg font-semibold tracking-tight">0 / 3</div>
+          </div>
         </div>
 
         <div className="grid grid-cols-5 gap-2 rounded-2xl border border-white/10 bg-white/5 p-2 text-sm">
-          <Link className="rounded-xl px-3 py-2 text-center hover:bg-white/5" href={`/${locale}/app`}>
+          <Link className="rounded-xl px-3 py-2 text-center hover:bg-white/5" href={`/${lang}/app`}>
             {m.nav.dashboard}
           </Link>
           <Link className="rounded-xl px-3 py-2 text-center hover:bg-white/5" href="/rounds">
@@ -89,7 +90,7 @@ export default function ClientDashboard({ params }: { params: Promise<{ locale: 
           <Link className="rounded-xl px-3 py-2 text-center hover:bg-white/5" href="#">
             {m.nav.withdraw}
           </Link>
-          <Link className="rounded-xl px-3 py-2 text-center hover:bg-white/5" href={`/${locale}/me`}>
+          <Link className="rounded-xl px-3 py-2 text-center hover:bg-white/5" href={`/${lang}/me`}>
             {m.nav.me}
           </Link>
         </div>
@@ -97,3 +98,4 @@ export default function ClientDashboard({ params }: { params: Promise<{ locale: 
     </main>
   )
 }
+
